@@ -1,4 +1,5 @@
 use eframe::egui;
+use egui::Color32;
 
 fn main() -> Result<(), eframe::Error> {
     let options = eframe::NativeOptions {
@@ -175,6 +176,7 @@ impl eframe::App for TicTacToeApp {
         if self.active {
                 if self.is_full() && self.check_winner().is_none() {
                     self.state_text = "It's a draw!".to_string();
+                    self.active = false;
                 } else if self.check_winner().is_some() {
                     let winner = match self.check_winner(){
                         Some(Player::X) => "X".to_string(),
@@ -186,7 +188,12 @@ impl eframe::App for TicTacToeApp {
                 } 
         }
         ui.vertical_centered(|ui|{
-            ui.heading(&self.state_text);
+            let color : Color32;
+             if self.active { color = match self.current_player{
+                Player::X => Color32::from_rgb(255, 0, 0),
+                Player::O => Color32::from_rgb(0, 0, 255),
+            }} else {color = Color32::from_rgb(0, 255, 0)};
+            ui.colored_label(color, &self.state_text);
         });
         
     });
