@@ -16,8 +16,7 @@ fn main() -> Result<(), eframe::Error> {
     )
 }
 
-
-struct TicTacToeApp{
+struct TicTacToeApp {
     board: [[CellState; 3]; 3],
     current_player: Player,
     state_text: String,
@@ -35,17 +34,17 @@ impl Default for TicTacToeApp {
     }
 }
 
-impl TicTacToeApp{
-    fn clear(&mut self){
+impl TicTacToeApp {
+    fn clear(&mut self) {
         self.board = [[CellState::Empty; 3]; 3];
         self.current_player = Player::X;
         self.state_text = "Player X's turn".to_string();
         self.active = true
     }
 
-    fn is_full(&self) -> bool{
-        for row in 0..3{
-            for col in 0..3{
+    fn is_full(&self) -> bool {
+        for row in 0..3 {
+            for col in 0..3 {
                 if self.board[row][col] == CellState::Empty {
                     return false;
                 }
@@ -54,10 +53,11 @@ impl TicTacToeApp{
         return true;
     }
 
-    fn check_winner(&self) -> Option<Player>{
-        for row in 0..3{
-            if self.board[row][0] == self.board[row][1] && self.board[row][1] == self.board[row][2]{
-                match self.board[row][0]{
+    fn check_winner(&self) -> Option<Player> {
+        for row in 0..3 {
+            if self.board[row][0] == self.board[row][1] && self.board[row][1] == self.board[row][2]
+            {
+                match self.board[row][0] {
                     CellState::X => return Some(Player::X),
                     CellState::O => return Some(Player::O),
                     _ => (),
@@ -65,9 +65,10 @@ impl TicTacToeApp{
             }
         }
 
-        for col in 0..3{
-            if self.board[0][col] == self.board[1][col] && self.board[1][col] == self.board[2][col]{
-                match self.board[0][col]{
+        for col in 0..3 {
+            if self.board[0][col] == self.board[1][col] && self.board[1][col] == self.board[2][col]
+            {
+                match self.board[0][col] {
                     CellState::X => return Some(Player::X),
                     CellState::O => return Some(Player::O),
                     _ => (),
@@ -75,16 +76,16 @@ impl TicTacToeApp{
             }
         }
 
-        if self.board[0][0] == self.board[1][1] && self.board[1][1] == self.board[2][2]{
-            match self.board[0][0]{
+        if self.board[0][0] == self.board[1][1] && self.board[1][1] == self.board[2][2] {
+            match self.board[0][0] {
                 CellState::X => return Some(Player::X),
                 CellState::O => return Some(Player::O),
                 _ => (),
             }
         }
 
-        if self.board[0][2] == self.board[1][1] && self.board[1][1] == self.board[2][0]{
-            match self.board[0][2]{
+        if self.board[0][2] == self.board[1][1] && self.board[1][1] == self.board[2][0] {
+            match self.board[0][2] {
                 CellState::X => return Some(Player::X),
                 CellState::O => return Some(Player::O),
                 _ => (),
@@ -92,9 +93,7 @@ impl TicTacToeApp{
         }
 
         None
-        
     }
-    
 }
 
 #[derive(Clone, Copy, PartialEq)]
@@ -122,80 +121,81 @@ impl Default for Player {
     }
 }
 
-
-
 impl eframe::App for TicTacToeApp {
     fn update(&mut self, ctx: &egui::Context, _frame: &mut eframe::Frame) {
-        egui::CentralPanel::default().show(ctx,|ui|{
-        ui.vertical_centered(|ui|{
-            ui.heading("Tic Tac Toe");
-            let clear_button = ui.add(egui::Button::new("Clear"));
-            if clear_button.clicked(){
-                self.clear();
-            }
-        });
-        ui.vertical_centered(|ui|{
-            egui::Grid::new("tictactoe_grid")
-                .spacing([2.0, 2.0])
-                .show(ui, |ui| {
-                    for row in 0..3 {
-                        for col in 0..3 {
-                            
-                            let cell = &mut self.board[row][col];
-                            let button_label = match cell {
-                                CellState::Empty => " ",
-                                CellState::X => "X",
-                                CellState::O => "O",
-                            };
-
-                            let button = ui.add_sized(
-                                [50.0, 50.0],
-                                egui::Button::new(button_label)
-                            );
-
-                            if button.clicked() && self.active && *cell == CellState::Empty {
-                                *cell = match self.current_player {
-                                    Player::X => CellState::X,
-                                    Player::O => CellState::O,
-                                };
-                                self.current_player = match self.current_player {
-                                    Player::X => Player::O,
-                                    Player::O => Player::X,
-                                };
-                                self.state_text = format!("Player {}'s turn", match self.current_player{
-                                    Player::X => "X",
-                                    Player::O => "O",
-                                });
-                            }
-                        }
-                        ui.end_row();
-                    }
-                });
+        egui::CentralPanel::default().show(ctx, |ui| {
+            ui.vertical_centered(|ui| {
+                ui.heading("Tic Tac Toe");
+                let clear_button = ui.add(egui::Button::new("Clear"));
+                if clear_button.clicked() {
+                    self.clear();
+                }
             });
-            
-        if self.active {
+            ui.vertical_centered(|ui| {
+                egui::Grid::new("tictactoe_grid")
+                    .spacing([2.0, 2.0])
+                    .show(ui, |ui| {
+                        for row in 0..3 {
+                            for col in 0..3 {
+                                let cell = &mut self.board[row][col];
+                                let button_label = match cell {
+                                    CellState::Empty => " ",
+                                    CellState::X => "X",
+                                    CellState::O => "O",
+                                };
+
+                                let button =
+                                    ui.add_sized([50.0, 50.0], egui::Button::new(button_label));
+
+                                if button.clicked() && self.active && *cell == CellState::Empty {
+                                    *cell = match self.current_player {
+                                        Player::X => CellState::X,
+                                        Player::O => CellState::O,
+                                    };
+                                    self.current_player = match self.current_player {
+                                        Player::X => Player::O,
+                                        Player::O => Player::X,
+                                    };
+                                    self.state_text = format!(
+                                        "Player {}'s turn",
+                                        match self.current_player {
+                                            Player::X => "X",
+                                            Player::O => "O",
+                                        }
+                                    );
+                                }
+                            }
+                            ui.end_row();
+                        }
+                    });
+            });
+
+            if self.active {
                 if self.is_full() && self.check_winner().is_none() {
                     self.state_text = "It's a draw!".to_string();
                     self.active = false;
                 } else if self.check_winner().is_some() {
-                    let winner = match self.check_winner(){
+                    let winner = match self.check_winner() {
                         Some(Player::X) => "X".to_string(),
                         Some(Player::O) => "O".to_string(),
                         _ => "X".to_string(),
                     };
                     self.state_text = format!("Player {} wins!", winner);
                     self.active = false;
-                } 
-        }
-        ui.vertical_centered(|ui|{
-            let color : Color32;
-             if self.active { color = match self.current_player{
-                Player::X => Color32::from_rgb(255, 0, 0),
-                Player::O => Color32::from_rgb(0, 0, 255),
-            }} else {color = Color32::from_rgb(0, 255, 0)};
-            ui.colored_label(color, &self.state_text);
+                }
+            }
+            ui.vertical_centered(|ui| {
+                let color: Color32;
+                if self.active {
+                    color = match self.current_player {
+                        Player::X => Color32::from_rgb(255, 0, 0),
+                        Player::O => Color32::from_rgb(0, 0, 255),
+                    }
+                } else {
+                    color = Color32::from_rgb(0, 255, 0)
+                };
+                ui.colored_label(color, &self.state_text);
+            });
         });
-        
-    });
     }
 }
